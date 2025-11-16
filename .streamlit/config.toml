@@ -1,0 +1,9 @@
+[server]
+runOnSave = true
+
+[logger]
+level = "info"
+
+[global]
+# Указываем Python 3.10, так как он более стабилен для MediaPipe/OpenCV
+python = 3.10
