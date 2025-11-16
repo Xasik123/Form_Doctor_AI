@@ -1,5 +1,3 @@
 streamlit
 numpy
 google-genai
-opencv-python
-mediapipe
