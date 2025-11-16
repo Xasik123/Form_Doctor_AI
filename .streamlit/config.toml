@@ -8,4 +8,4 @@ level = "info"
 python = 3.10 
 
 [runner]
-post_setup_command = "sh .streamlit/post_setup.sh" # <-- ЭТА СТРОКА ДОБАВЛЕНА
+post_setup_command = "bash .streamlit/post_setup.sh" # <-- Используем bash вместо sh
