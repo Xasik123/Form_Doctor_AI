@@ -5,5 +5,7 @@ runOnSave = true
 level = "info"
 
 [global]
-# Указываем Python 3.10, так как он более стабилен для MediaPipe/OpenCV
-python = 3.10
+python = 3.10 
+
+[runner]
+post_setup_command = "sh .streamlit/post_setup.sh" # <-- ЭТА СТРОКА ДОБАВЛЕНА
