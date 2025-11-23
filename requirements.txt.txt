@@ -1,3 +1,0 @@
-streamlit
-numpy
-google-genai
