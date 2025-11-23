@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+opencv-python-headless
+mediapipe
+numpy
+google-genai
+ffmpeg-python
+sqlalchemy
+passlib[bcrypt]
+pydantic
