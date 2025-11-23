@@ -1,30 +1,32 @@
-# Используем официальный образ Python 3.10 (slim версия для уменьшения размера)
+# Используем Python 3.10
 FROM python:3.10-slim
 
-# Устанавливаем рабочую директорию
+# Создаем пользователя (требование безопасности Hugging Face)
+RUN useradd -m -u 1000 user
 WORKDIR /app
 
-# Устанавливаем системные зависимости
-# Добавляем --fix-missing и --no-install-recommends для стабильности
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Устанавливаем системные библиотеки для видео (от имени root)
+RUN apt-get update && apt-get install -y \
     ffmpeg \
     libsm6 \
     libxext6 \
     libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Сначала копируем requirements.txt (для кэширования слоев Docker)
+# Копируем и устанавливаем Python-зависимости
 COPY requirements.txt .
-
-# Устанавливаем Python-зависимости
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Копируем остальной код проекта
-COPY . .
+# Копируем код проекта
+COPY --chown=user . .
 
-# Открываем порт (Render ожидает 10000 по умолчанию, но uvicorn настроим ниже)
-EXPOSE 10000
+# Переключаемся на обычного пользователя
+USER user
 
-# Команда запуска
-CMD ["uvicorn", "backend_api:app", "--host", "0.0.0.0", "--port", "10000"]
+# Открываем порт 7860 (ОБЯЗАТЕЛЬНО ДЛЯ HF)
+EXPOSE 7860
+
+# Запускаем сервер на порту 7860
+CMD ["uvicorn", "backend_api:app", "--host", "0.0.0.0", "--port", "7860"]
+
