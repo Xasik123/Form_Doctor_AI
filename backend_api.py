@@ -6,6 +6,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 from typing import Optional
 import shutil
+import sys
 import os
 import tempfile
 import cv2
@@ -22,11 +23,16 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
 
 # --- 1. НАСТРОЙКА БАЗЫ ДАННЫХ ---
-DATABASE_URL = "sqlite:///./sql_app.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-Base = declarative_base()
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Умная настройка пути:
+if sys.platform.startswith('win'):
+    # Если Windows (ваш компьютер) -> сохраняем в папке проекта
+    DATABASE_URL = "sqlite:///./sql_app.db"
+else:
+    # Если Linux (Hugging Face / Docker) -> сохраняем в папке /tmp (там всегда есть права)
+    # Обратите внимание на 4 слэша: sqlite:////tmp/...
+    DATABASE_URL = "sqlite:////tmp/sql_app.db"
 
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
